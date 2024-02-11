@@ -31,10 +31,7 @@ export default function CreateEditCase() {
     <div className="py-12">
       <div className="container">
         <div>
-          <Link
-            to={Routes.MyCases}
-            className="btn btn-sm btn-light text-dark-acc/50 hover:text-dark-acc focus:text-dark-acc"
-          >
+          <Link to={Routes.MyCases} className="btn btn-sm btn-light text-dark/50 hover:text-dark focus:text-dark">
             <i className="fi fi-rs-angle-left text-xs"></i> Back to My Cases
           </Link>
         </div>

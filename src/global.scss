@@ -70,59 +70,38 @@
 
   .btn-prim {
     @apply bg-prim text-light;
-
-    &:not(:disabled) {
-      @apply hover:bg-prim-acc focus:bg-prim-acc;
-    }
+    @apply hover:bg-prim-acc focus:bg-prim-acc;
   }
 
   .btn-dark {
     @apply bg-dark text-light;
-
-    &:not(:disabled) {
-      @apply hover:bg-dark-acc focus:bg-dark-acc;
-    }
+    @apply hover:bg-dark-acc focus:bg-dark-acc;
   }
 
   .btn-light {
     @apply bg-light text-dark;
-
-    &:not(:disabled) {
-      @apply hover:bg-light-acc focus:bg-light-acc;
-    }
+    @apply hover:bg-light-acc focus:bg-light-acc;
   }
 
   .btn-info {
     @apply bg-blue-500 text-light;
-
-    &:not(:disabled) {
-      @apply hover:bg-blue-600 focus:bg-blue-600;
-    }
+    @apply hover:bg-blue-600 focus:bg-blue-600;
   }
 
   .btn-success {
     @apply bg-green-500 text-light;
-
-    &:not(:disabled) {
-      @apply hover:bg-green-600 focus:bg-green-600;
-    }
+    @apply hover:bg-green-600 focus:bg-green-600;
   }
 
   .btn-warning {
     @apply bg-yellow-500 text-dark;
-
-    &:not(:disabled) {
-      @apply hover:bg-yellow-600 focus:bg-yellow-600;
-      @apply hover:text-light focus:text-light;
-    }
+    @apply hover:bg-yellow-600 focus:bg-yellow-600;
+    @apply hover:text-light focus:text-light;
   }
 
   .btn-danger {
     @apply bg-red-500 text-light;
-
-    &:not(:disabled) {
-      @apply hover:bg-red-600 focus:bg-red-600;
-    }
+    @apply hover:bg-red-600 focus:bg-red-600;
   }
 
   /* ---------------- */
@@ -134,72 +113,51 @@
 
   .btn-outline-prim {
     @apply border-prim text-prim;
-
-    &:not(:disabled) {
-      @apply hover:border-prim-acc focus:border-prim-acc;
-      @apply hover:bg-prim-acc focus:bg-prim-acc;
-      @apply hover:text-light focus:text-light;
-    }
+    @apply hover:border-prim-acc focus:border-prim-acc;
+    @apply hover:bg-prim-acc focus:bg-prim-acc;
+    @apply hover:text-light focus:text-light;
   }
 
   .btn-outline-dark {
     @apply border-dark text-dark;
-
-    &:not(:disabled) {
-      @apply hover:border-dark-acc focus:border-dark-acc;
-      @apply hover:bg-dark-acc focus:bg-dark-acc;
-      @apply hover:text-light focus:text-light;
-    }
+    @apply hover:border-dark-acc focus:border-dark-acc;
+    @apply hover:bg-dark-acc focus:bg-dark-acc;
+    @apply hover:text-light focus:text-light;
   }
 
   .btn-outline-light {
     @apply border-light text-light;
-
-    &:not(:disabled) {
-      @apply hover:border-light-acc focus:border-light-acc;
-      @apply hover:bg-light-acc focus:bg-light-acc;
-      @apply hover:text-dark focus:text-dark;
-    }
+    @apply hover:border-light-acc focus:border-light-acc;
+    @apply hover:bg-light-acc focus:bg-light-acc;
+    @apply hover:text-dark focus:text-dark;
   }
 
   .btn-outline-info {
     @apply border-blue-500 text-blue-500;
-
-    &:not(:disabled) {
-      @apply hover:border-blue-600 focus:border-blue-600;
-      @apply hover:bg-blue-600 focus:bg-blue-600;
-      @apply hover:text-light focus:text-light;
-    }
+    @apply hover:border-blue-600 focus:border-blue-600;
+    @apply hover:bg-blue-600 focus:bg-blue-600;
+    @apply hover:text-light focus:text-light;
   }
 
   .btn-outline-success {
     @apply border-green-500 text-green-500;
-
-    &:not(:disabled) {
-      @apply hover:border-green-600 focus:border-green-600;
-      @apply hover:bg-green-600 focus:bg-green-600;
-      @apply hover:text-light focus:text-light;
-    }
+    @apply hover:border-green-600 focus:border-green-600;
+    @apply hover:bg-green-600 focus:bg-green-600;
+    @apply hover:text-light focus:text-light;
   }
 
   .btn-outline-warning {
     @apply border-yellow-500 text-yellow-500;
-
-    &:not(:disabled) {
-      @apply hover:border-yellow-600 focus:border-yellow-600;
-      @apply hover:bg-yellow-600 focus:bg-yellow-600;
-      @apply hover:text-light focus:text-light;
-    }
+    @apply hover:border-yellow-600 focus:border-yellow-600;
+    @apply hover:bg-yellow-600 focus:bg-yellow-600;
+    @apply hover:text-light focus:text-light;
   }
 
   .btn-outline-danger {
     @apply border-red-500 text-red-500;
-
-    &:not(:disabled) {
-      @apply hover:border-red-600 focus:border-red-600;
-      @apply hover:bg-red-600 focus:bg-red-600;
-      @apply hover:text-light focus:text-light;
-    }
+    @apply hover:border-red-600 focus:border-red-600;
+    @apply hover:bg-red-600 focus:bg-red-600;
+    @apply hover:text-light focus:text-light;
   }
 
   /* ---------------- */
@@ -233,10 +191,7 @@
 
   .form-ctrl {
     @apply w-full px-[1em] py-[0.5em] rounded border;
-
-    &:not(:disabled) {
-      @apply focus:ring focus:border-dark/50;
-    }
+    @apply focus:ring focus:border-dark/50;
   }
 
   textarea.form-ctrl {
@@ -261,10 +216,7 @@
 
   .form-ctrl-error {
     @apply border-red-500;
-
-    &:not(:disabled) {
-      @apply focus:border-red-500/50 focus:ring-red-500;
-    }
+    @apply focus:border-red-500/50 focus:ring-red-500;
   }
 
   /* ---------------- */
