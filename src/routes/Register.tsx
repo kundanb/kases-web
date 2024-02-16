@@ -1,23 +1,26 @@
-import { Form, Formik, FormikContextType } from 'formik'
+import { useState } from 'react'
+import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import FormikErrorFocus from 'formik-error-focus'
 import { toast } from 'react-toastify'
-import { ApiErrResp } from '@/utils/types'
+import type { ApiErrResp } from '@/utils/types'
+import { UserRole } from '@/utils/enums'
 import { Routes } from '@/utils/consts'
 import { useAppDispatch } from '@/app/store'
-import { fetchMeApi, registerApi } from '@/app/auth/authApis'
+import { RegisterApiProps, fetchMeApi, registerApi } from '@/app/auth/authApis'
 import Link from '@/components/Link'
 import ApiErrorToast from '@/components/Toasts'
 import * as FormElems from '@/components/Form'
 
-interface RegisterFormProps {
+interface FormVals {
+  role: UserRole | undefined
   username: string
   email: string
   password: string
   confirmPassword: string
 }
 
-const initialValues: RegisterFormProps = {
+const formInitVals: FormVals = {
+  role: undefined,
   username: 'kundanb',
   email: 'kundanbhasin11062000@gmail.com',
   password: 'd?mL6W5#5xv8M7?',
@@ -27,8 +30,10 @@ const initialValues: RegisterFormProps = {
 export default function Register() {
   const dispatch = useAppDispatch()
 
+  const [isFormLoading, setIsFormLoading] = useState(0)
+
   return (
-    <div className="py-12">
+    <div className="py-8">
       <div className="container">
         <div className="max-w-md mx-auto text-center">
           <p className="flex justify-center items-center gap-1 text-sm">
@@ -46,45 +51,67 @@ export default function Register() {
 
           <div className="mt-8 card text-left">
             <Formik
-              initialValues={initialValues}
+              initialValues={formInitVals}
               enableReinitialize
               validateOnChange
               validationSchema={Yup.object({
-                username: Yup.string()
-                  .required('Please create a new username')
-                  .min(6, 'Username must be at least 6 characters')
-                  .matches(/^\w+$/, 'Username can only contain letters, numbers, and underscores')
-                  .matches(/[a-zA-Z]/, 'Username must contain at least 1 letter'),
+                role: Yup.mixed<UserRole>()
+                  .required('Please select a role.')
+                  .oneOf([UserRole.Lawyer, UserRole.Client], 'Please select a valid role.'),
 
-                email: Yup.string().required('Please enter your email').email('Please enter a valid email'),
+                username: Yup.string()
+                  .required('Please create a new username.')
+                  .min(6, 'Username must be at least 6 characters.')
+                  .matches(/^\w+$/, 'Username can only contain letters, numbers, and underscores.')
+                  .matches(/[a-zA-Z]/, 'Username must contain at least 1 letter.'),
+
+                email: Yup.string().required('Please enter your email').email('Please enter a valid email.'),
 
                 password: Yup.string()
-                  .required('Please create a new password')
-                  .min(8, 'Password must be at least 8 characters'),
+                  .required('Please create a new password.')
+                  .min(8, 'Password must be at least 8 characters.'),
 
                 confirmPassword: Yup.string()
-                  .required('Please retype your password')
-                  .oneOf([Yup.ref('password')], 'Passwords do not match'),
+                  .required('Please retype your password.')
+                  .oneOf([Yup.ref('password')], 'Passwords do not match.'),
               })}
-              onSubmit={async (values, { setSubmitting }) => {
+              onSubmit={async values => {
                 try {
-                  const body = {
+                  const body: RegisterApiProps['body'] = {
+                    role: values.role!,
                     username: values.username,
                     email: values.email,
                     password: values.password,
                   }
 
-                  await dispatch(registerApi(body)).unwrap()
-                  await dispatch(fetchMeApi()).unwrap()
+                  await dispatch(registerApi({ setIsLoading: setIsFormLoading, body })).unwrap()
+                  toast.success('Registered successfully')
+                  await dispatch(fetchMeApi({ setIsLoading: setIsFormLoading })).unwrap()
                 } catch (e) {
                   toast.error(ApiErrorToast(e as ApiErrResp))
-                } finally {
-                  setSubmitting(false)
                 }
               }}
             >
-              {({ values, touched, errors, handleChange, handleSubmit, isSubmitting }) => (
+              {({ values, touched, errors, setFieldValue, handleChange, handleSubmit }) => (
                 <Form className="flex flex-col gap-8" onSubmit={handleSubmit} autoComplete="off">
+                  <FormElems.Field>
+                    <FormElems.Label>Role</FormElems.Label>
+
+                    <FormElems.RadioGroup
+                      options={[
+                        { label: 'Lawyer', value: UserRole.Lawyer },
+                        { label: 'Client', value: UserRole.Client },
+                      ]}
+                      name="role"
+                      value={values.role}
+                      onChange={e => e.target.checked && setFieldValue(e.target.name, +e.target.value)}
+                      disabled={!!isFormLoading}
+                      hasError={touched.role && !!errors.role}
+                    />
+
+                    <FormElems.ErrMsg name="role" />
+                  </FormElems.Field>
+
                   <FormElems.Field>
                     <FormElems.Label htmlFor="username">Username</FormElems.Label>
                     <FormElems.Input
@@ -94,7 +121,7 @@ export default function Register() {
                       value={values.username}
                       onChange={handleChange}
                       hasError={touched.username && !!errors.username}
-                      disabled={isSubmitting}
+                      disabled={!!isFormLoading}
                       autoFocus
                     />
                     <FormElems.ErrMsg name="username" />
@@ -110,7 +137,7 @@ export default function Register() {
                       value={values.email}
                       onChange={handleChange}
                       hasError={touched.email && !!errors.email}
-                      disabled={isSubmitting}
+                      disabled={!!isFormLoading}
                     />
                     <FormElems.ErrMsg name="email" />
                   </FormElems.Field>
@@ -124,7 +151,7 @@ export default function Register() {
                       value={values.password}
                       onChange={handleChange}
                       hasError={touched.password && !!errors.password}
-                      disabled={isSubmitting}
+                      disabled={!!isFormLoading}
                     />
                     <FormElems.ErrMsg name="password" />
                   </FormElems.Field>
@@ -138,24 +165,18 @@ export default function Register() {
                       value={values.confirmPassword}
                       onChange={handleChange}
                       hasError={touched.confirmPassword && !!errors.confirmPassword}
-                      disabled={isSubmitting}
+                      disabled={!!isFormLoading}
                     />
                     <FormElems.ErrMsg name="confirmPassword" />
                   </FormElems.Field>
 
                   <FormElems.Field>
-                    <button type="submit" className="btn btn-prim" disabled={isSubmitting}>
-                      {isSubmitting && <span className="spinner spinner-light"></span>} Register
+                    <button type="submit" className="btn btn-prim" disabled={!!isFormLoading}>
+                      {!!isFormLoading && <span className="spinner spinner-light"></span>} Register
                     </button>
                   </FormElems.Field>
 
-                  <FormikErrorFocus
-                    offset={0}
-                    align="middle"
-                    focusDelay={0}
-                    duration={150}
-                    formik={{} as FormikContextType<object>}
-                  />
+                  <FormElems.ErrorFocus />
                 </Form>
               )}
             </Formik>

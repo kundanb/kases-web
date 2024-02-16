@@ -8,7 +8,7 @@ export interface RespCase {
   added_by_id: number
   case_number: string
   title: string
-  description?: string
+  description?: string | null
   status: CaseStatus
   created_at: string
   updated_at: string
@@ -19,12 +19,12 @@ export default class Case {
   addedById: number
   caseNumber: string
   title: string
-  description?: string
+  description?: string | null
   status: CaseStatus
   createdAt: string
   updatedAt: string
 
-  addedBy$?: User
+  addedBy$?: User | null
 
   constructor(caseRef: Case) {
     this.id = caseRef.id

@@ -42,7 +42,7 @@ const authSlice = createSlice({
     builder.addCase(fetchMeApi.fulfilled, (state, action) => {
       state.isLoading--
 
-      if (action.payload !== null) {
+      if (action.payload) {
         state.isLoggedIn = true
         state.user = action.payload
       }

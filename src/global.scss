@@ -7,10 +7,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ================================ */
-/* base */
-/* ================================ */
-
 @layer base {
   * {
     @apply scroll-smooth outline-none transition-all;
@@ -26,28 +22,15 @@
   }
 
   i.fi {
-    @apply flex;
+    @apply h-[1.5em] flex justify-center items-center;
   }
 }
 
-/* ================================ */
-/* components */
-/* ================================ */
-
 @layer components {
-  /* ---------------- */
-  /* buttons */
-
   .btn {
-    @apply px-[1em] py-[0.5em] rounded font-medium inline-flex justify-center items-center gap-2;
-
-    &:not(:disabled) {
-      @apply focus:ring;
-    }
+    @apply px-[0.8em] py-[0.5em] rounded font-medium inline-flex justify-center items-center gap-3;
+    @apply focus:ring;
   }
-
-  /* ---------------- */
-  /* button sizes */
 
   .btn-xs {
     @apply text-xs rounded-sm;
@@ -56,7 +39,7 @@
     @apply text-sm rounded;
   }
   .btn-md {
-    @apply text-base rounded;
+    @apply text-base rounded-md;
   }
   .btn-lg {
     @apply text-lg rounded-lg;
@@ -64,9 +47,43 @@
   .btn-xl {
     @apply text-xl rounded-xl;
   }
+  .btn-2xl {
+    @apply text-2xl rounded-2xl;
+  }
+  .btn-3xl {
+    @apply text-3xl rounded-3xl;
+  }
+  .btn-4xl {
+    @apply text-4xl rounded-4xl;
+  }
 
-  /* ---------------- */
-  /* button colors */
+  .btn-wider-xs {
+    @apply px-4;
+  }
+  .btn-wider-sm {
+    @apply px-6;
+  }
+  .btn-wider-md {
+    @apply px-8;
+  }
+  .btn-wider-lg {
+    @apply px-12;
+  }
+  .btn-wider-xl {
+    @apply px-16;
+  }
+  .btn-wider-2xl {
+    @apply px-20;
+  }
+  .btn-wider-3xl {
+    @apply px-24;
+  }
+  .btn-wider-4xl {
+    @apply px-28;
+  }
+  .btn-wider-full {
+    @apply w-full;
+  }
 
   .btn-prim {
     @apply bg-prim text-light;
@@ -84,28 +101,24 @@
   }
 
   .btn-info {
-    @apply bg-blue-500 text-light;
-    @apply hover:bg-blue-600 focus:bg-blue-600;
+    @apply bg-info text-light;
+    @apply hover:bg-info-acc focus:bg-info-acc;
   }
 
   .btn-success {
-    @apply bg-green-500 text-light;
-    @apply hover:bg-green-600 focus:bg-green-600;
+    @apply bg-success text-light;
+    @apply hover:bg-success-acc focus:bg-success-acc;
   }
 
   .btn-warning {
-    @apply bg-yellow-500 text-dark;
-    @apply hover:bg-yellow-600 focus:bg-yellow-600;
-    @apply hover:text-light focus:text-light;
+    @apply bg-warning text-dark;
+    @apply hover:bg-warning-acc focus:bg-warning-acc;
   }
 
   .btn-danger {
-    @apply bg-red-500 text-light;
-    @apply hover:bg-red-600 focus:bg-red-600;
+    @apply bg-danger text-light;
+    @apply hover:bg-danger-acc focus:bg-danger-acc;
   }
-
-  /* ---------------- */
-  /* button outlined */
 
   .btn-outline {
     @apply border-2;
@@ -133,42 +146,121 @@
   }
 
   .btn-outline-info {
-    @apply border-blue-500 text-blue-500;
-    @apply hover:border-blue-600 focus:border-blue-600;
-    @apply hover:bg-blue-600 focus:bg-blue-600;
+    @apply border-info text-info;
+    @apply hover:border-info-acc focus:border-info-acc;
+    @apply hover:bg-infacborder-info-acc focus:bg-infacborder-info-acc;
     @apply hover:text-light focus:text-light;
   }
 
   .btn-outline-success {
-    @apply border-green-500 text-green-500;
-    @apply hover:border-green-600 focus:border-green-600;
-    @apply hover:bg-green-600 focus:bg-green-600;
+    @apply border-success text-success;
+    @apply hover:border-success-acc focus:border-success-acc;
+    @apply hover:bg-success-acc focus:bg-success-acc;
     @apply hover:text-light focus:text-light;
   }
 
   .btn-outline-warning {
-    @apply border-yellow-500 text-yellow-500;
-    @apply hover:border-yellow-600 focus:border-yellow-600;
-    @apply hover:bg-yellow-600 focus:bg-yellow-600;
+    @apply border-warning text-warning;
+    @apply hover:border-warning-acc focus:border-warning-acc;
+    @apply hover:bg-warning-acc focus:bg-warning-acc;
     @apply hover:text-light focus:text-light;
   }
 
   .btn-outline-danger {
-    @apply border-red-500 text-red-500;
-    @apply hover:border-red-600 focus:border-red-600;
-    @apply hover:bg-red-600 focus:bg-red-600;
+    @apply border-danger text-danger;
+    @apply hover:border-danger-acc focus:border-danger-acc;
+    @apply hover:bg-danger-acc focus:bg-danger-acc;
     @apply hover:text-light focus:text-light;
   }
 
-  /* ---------------- */
-  /* card */
+  .btn-txt {
+    @apply p-[0.1em];
+  }
+
+  .btn-txt-prim {
+    @apply text-prim;
+    @apply hover:text-prim-acc focus:text-prim-acc;
+  }
+
+  .btn-txt-dark {
+    @apply text-dark;
+    @apply hover:text-dark-acc focus:text-dark-acc;
+  }
+
+  .btn-txt-light {
+    @apply text-light;
+    @apply hover:text-light-acc focus:text-light-acc;
+  }
+
+  .btn-txt-info {
+    @apply text-info;
+    @apply hover:text-info-acc focus:text-info-acc;
+  }
+
+  .btn-txt-success {
+    @apply text-success;
+    @apply hover:text-success-acc focus:text-success-acc;
+  }
+
+  .btn-txt-warning {
+    @apply text-warning;
+    @apply hover:text-warning-acc focus:text-warning-acc;
+  }
+
+  .tag {
+    @apply px-[0.5em] py-[0.2em] rounded inline-flex justify-center items-center gap-2;
+  }
+
+  .tag-xs {
+    @apply text-xs;
+  }
+  .tag-sm {
+    @apply text-sm;
+  }
+  .tag-md {
+    @apply text-base;
+  }
+  .tag-lg {
+    @apply text-lg rounded-md;
+  }
+  .tag-xl {
+    @apply text-xl rounded-md;
+  }
+  .tag-2xl {
+    @apply text-2xl rounded-lg;
+  }
+  .tag-3xl {
+    @apply text-3xl rounded-lg;
+  }
+  .tag-4xl {
+    @apply text-4xl rounded-xl;
+  }
+
+  .tag-prim {
+    @apply bg-prim text-light;
+  }
+  .tag-dark {
+    @apply bg-dark text-light;
+  }
+  .tag-light {
+    @apply bg-light text-dark;
+  }
+  .tag-info {
+    @apply bg-info text-light;
+  }
+  .tag-success {
+    @apply bg-success text-light;
+  }
+  .tag-warning {
+    @apply bg-warning text-dark;
+  }
+  .tag-danger {
+    @apply bg-danger text-light;
+  }
 
   .card {
     @apply px-12 py-8 bg-light rounded border border-light-acc shadow-md;
   }
-
-  /* ---------------- */
-  /* card sizes */
 
   .card-xs {
     @apply px-4 py-2 shadow-sm;
@@ -186,12 +278,9 @@
     @apply px-28 py-24 shadow-xl;
   }
 
-  /* ---------------- */
-  /* form control */
-
   .form-ctrl {
-    @apply w-full px-[1em] py-[0.5em] rounded border;
-    @apply focus:ring focus:border-dark/50;
+    @apply w-full px-[1em] py-[0.5em] rounded border bg-light;
+    @apply focus:ring focus:border-dark/50 read-only:bg-light-acc read-only:text-dark/70;
   }
 
   textarea.form-ctrl {
@@ -215,21 +304,15 @@
   }
 
   .form-ctrl-error {
-    @apply border-red-500;
-    @apply focus:border-red-500/50 focus:ring-red-500;
+    @apply border-danger;
+    @apply focus:border-danger/50 focus:ring-danger;
   }
-
-  /* ---------------- */
-  /* spinner */
 
   .spinner {
     @apply inline-block size-[1em] rounded-full;
     @apply border-t-[3px] border-t-dark border-r-[3px] border-r-transparent;
     @apply animate-spin;
   }
-
-  /* ---------------- */
-  /* spinner sizes */
 
   .spinner-xs {
     @apply text-xs;
@@ -256,9 +339,6 @@
     @apply text-4xl;
   }
 
-  /* ---------------- */
-  /* spinner colors */
-
   .spinner-prim {
     @apply border-t-prim;
   }
@@ -269,20 +349,17 @@
     @apply border-t-light;
   }
   .spinner-info {
-    @apply border-t-blue-500;
+    @apply border-t-info-acc;
   }
   .spinner-success {
-    @apply border-t-green-500;
+    @apply border-t-success;
   }
   .spinner-warning {
-    @apply border-t-yellow-500;
+    @apply border-t-warning;
   }
   .spinner-danger {
-    @apply border-t-red-500;
+    @apply border-t-danger;
   }
-
-  /* ---------------- */
-  /* table */
 
   .table {
     @apply w-full;
@@ -312,13 +389,6 @@
     @apply py-2 border border-light-acc;
   }
 }
-
-/* ================================ */
-/* utilities */
-/* ================================ */
-
-/* ---------------- */
-/* animation fade */
 
 @layer utilities {
   .disabled {

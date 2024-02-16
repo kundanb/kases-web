@@ -22,7 +22,7 @@ export default {
           DEFAULT: '#010915',
         },
         'dark-acc': {
-          DEFAULT: '#031a3f',
+          DEFAULT: '#042556',
         },
         light: {
           DEFAULT: colors.white,
@@ -32,6 +32,30 @@ export default {
         },
         misc: {
           DEFAULT: colors.amber[300],
+        },
+        info: {
+          DEFAULT: colors.blue[500],
+        },
+        'info-acc': {
+          DEFAULT: colors.blue[600],
+        },
+        success: {
+          DEFAULT: colors.green[500],
+        },
+        'success-acc': {
+          DEFAULT: colors.green[600],
+        },
+        warning: {
+          DEFAULT: colors.yellow[500],
+        },
+        'warning-acc': {
+          DEFAULT: colors.yellow[600],
+        },
+        danger: {
+          DEFAULT: colors.red[500],
+        },
+        'danger-acc': {
+          DEFAULT: colors.red[600],
         },
       },
 
@@ -43,10 +67,7 @@ export default {
       zIndex: {
         'page-loader': '1000',
         header: '100',
-      },
-
-      borderRadius: {
-        DEFAULT: theme.borderRadius.md,
+        popup: '200',
       },
 
       container: {

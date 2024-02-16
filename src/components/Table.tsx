@@ -1,9 +1,11 @@
+import { get } from 'lodash'
+
 export type TableRecord = Record<string, React.ReactNode>
 
 export interface TableColumn<T = TableRecord> {
   title: string
-  key: keyof T
-  render?: (value: T[keyof T], record: T) => React.ReactNode
+  key: string
+  render?: (value: unknown, record: T) => React.ReactNode
 }
 
 export interface TableProps<T = TableRecord> {
@@ -29,7 +31,9 @@ export default function Table<T = TableRecord>({ columns, data }: TableProps<T>)
             <tr key={i}>
               <td>{i + 1}</td>
               {columns.map((col, j) => (
-                <td key={j}>{(col.render ? col.render(row[col.key], row) : row[col.key]) as React.ReactNode}</td>
+                <td key={j}>
+                  {(col.render ? col.render(get(row, col.key), row) : get(row, col.key)) as React.ReactNode}
+                </td>
               ))}
             </tr>
           ))}

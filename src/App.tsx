@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
-import { ApiErrResp } from './utils/types'
+import type { ApiErrResp } from './utils/types'
 import { Routes } from './utils/consts'
 import { useAppDispatch } from './app/store'
 import { fetchMeApi } from './app/auth/authApis'
@@ -14,6 +14,8 @@ import Login from './routes/Login'
 import MyDashboard from './routes/MyDashboard'
 import MyCases from './routes/MyCases'
 import CreateEditCase from './routes/CreateEditCase'
+import MyCase from './routes/MyCase'
+import MyHearings from './routes/MyHearings'
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -24,7 +26,7 @@ export default function App() {
     dispatch(fetchMeApi())
       .unwrap()
       .catch(e => toast.error(ApiErrorToast(e as ApiErrResp)))
-  }, [])
+  }, [dispatch])
 
   return (
     <>
@@ -47,6 +49,9 @@ export default function App() {
                 <Route path={Routes.MyDashboard} exact component={MyDashboard} />
                 <Route path={Routes.MyCases} exact component={MyCases} />
                 <Route path={Routes.CreateCase} exact component={CreateEditCase} />
+                <Route path={Routes.EditCase()} exact component={CreateEditCase} />
+                <Route path={Routes.MyCase()} exact component={MyCase} />
+                <Route path={Routes.MyHearings} exact component={MyHearings} />
 
                 <Route path="*">
                   <Redirect to={Routes.MyDashboard} />

@@ -1,108 +1,126 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { AxiosError, ApiErrResp, ApiOkResp } from '@/utils/types'
+import type { AxiosError, ApiErrResp, ApiOkResp, ApiBasePropsWithBody } from '@/utils/types'
 import { ErrorMessages } from '@/utils/consts'
 import axios from '@/utils/axios'
 import Case, { RespCase } from '@/models/Case'
 
-export interface CreateCaseApiBody {
+export type CreateCaseApiProps = ApiBasePropsWithBody<{
   case_number: string
   title: string
-  description?: string
-}
+  description?: string | null
+}>
 
 export type CreateCaseApiOkResp = ApiOkResp
-export type CreateCaseApiErrResp = ApiErrResp<CreateCaseApiBody>
+export type CreateCaseApiErrResp = ApiErrResp<CreateCaseApiProps['body']>
 
-export const createCaseApi = createAsyncThunk<void, CreateCaseApiBody>(
-  'auth/register',
+export const createCaseApi = createAsyncThunk<undefined, CreateCaseApiProps>(
+  'cases/create',
 
-  async (values, { rejectWithValue }) => {
+  async ({ setIsLoading, body }, { rejectWithValue }) => {
+    setIsLoading?.(prev => prev + 1)
+
     try {
-      await axios.post<CreateCaseApiOkResp>('/cases/new', values)
+      await axios.post<CreateCaseApiOkResp>('/cases/new', body)
     } catch (e) {
       const err = e as AxiosError<CreateCaseApiErrResp>
       return rejectWithValue(err.response?.data || { message: ErrorMessages.Unknown })
+    } finally {
+      setIsLoading?.(prev => prev - 1)
     }
-  }
+  },
 )
 
-export interface MyCasesApiBody {
-  page?: number
-  perPage?: number
-}
+export type MyCasesApiProps = ApiBasePropsWithBody<undefined | { page?: number; perPage?: number }>
 
 export type MyCasesApiOkResp = ApiOkResp<RespCase[]>
 export type MyCasesApiErrResp = ApiErrResp
 
-export const myCasesApi = createAsyncThunk<Case[], MyCasesApiBody | undefined>(
-  'cases/my',
+export const myCasesApi = createAsyncThunk<Case[], undefined | MyCasesApiProps>(
+  'cases/my/all',
 
-  async (values, { rejectWithValue }) => {
+  async (props, { rejectWithValue }) => {
+    props?.setIsLoading?.(prev => prev + 1)
+
     try {
-      const { data } = await axios.get<MyCasesApiOkResp>('/cases', { params: values })
+      const { data } = await axios.get<MyCasesApiOkResp>('/cases', { params: props?.body })
       return data.data!.map(c => ({ ...Case.fromResp(c) }))
     } catch (e) {
       const err = e as AxiosError<MyCasesApiErrResp>
       return rejectWithValue(err.response?.data || { message: ErrorMessages.Unknown })
+    } finally {
+      props?.setIsLoading?.(prev => prev - 1)
     }
-  }
+  },
 )
 
-export type MyCaseApiBody = number
+export type MyCaseApiProps = ApiBasePropsWithBody<number>
 
 export type MyCaseApiOkResp = ApiOkResp<RespCase>
 export type MyCaseApiErrResp = ApiErrResp
 
-export const myCaseApi = createAsyncThunk<Case, MyCaseApiBody>(
+export const myCaseApi = createAsyncThunk<Case, MyCaseApiProps>(
   'cases/my',
 
-  async (id, { rejectWithValue }) => {
+  async ({ setIsLoading, body: id }, { rejectWithValue }) => {
+    setIsLoading?.(prev => prev + 1)
+
     try {
-      const { data } = await axios.get<MyCaseApiOkResp>('/cases/' + id)
+      const { data } = await axios.get<MyCaseApiOkResp>(`/cases/${id}`)
       return { ...Case.fromResp(data.data!) }
     } catch (e) {
       const err = e as AxiosError<MyCaseApiErrResp>
       return rejectWithValue(err.response?.data || { message: ErrorMessages.Unknown })
+    } finally {
+      setIsLoading?.(prev => prev - 1)
     }
-  }
+  },
 )
 
-export interface UpdateCaseApiBody {
+export type UpdateCaseApiProps = ApiBasePropsWithBody<{
   id: number
-  title?: string
-  description?: string
-}
+  case_number: string
+  title: string
+  description?: string | null
+}>
 
 export type UpdateCaseApiOkResp = ApiOkResp
-export type UpdateCaseApiErrResp = ApiErrResp<Omit<UpdateCaseApiBody, 'id'>>
+export type UpdateCaseApiErrResp = ApiErrResp<Omit<UpdateCaseApiProps['body'], 'id'>>
 
-export const updateCaseApi = createAsyncThunk<void, UpdateCaseApiBody>(
+export const updateCaseApi = createAsyncThunk<undefined, UpdateCaseApiProps>(
   'cases/update',
 
-  async ({ id, ...values }, { rejectWithValue }) => {
+  async ({ setIsLoading, body: { id, ...body } }, { rejectWithValue }) => {
+    setIsLoading?.(prev => prev + 1)
+
     try {
-      await axios.put<UpdateCaseApiOkResp>('/cases/' + id, values)
+      await axios.put<UpdateCaseApiOkResp>(`/cases/${id}`, body)
     } catch (e) {
       const err = e as AxiosError<UpdateCaseApiErrResp>
       return rejectWithValue(err.response?.data || { message: ErrorMessages.Unknown })
+    } finally {
+      setIsLoading?.(prev => prev - 1)
     }
-  }
+  },
 )
 
-export type DeleteCaseApiBody = number
+export type DeleteCaseApiProps = ApiBasePropsWithBody<number>
 
 export type DeleteCaseApiOkResp = ApiOkResp
 export type DeleteCaseApiErrResp = ApiErrResp
 
-export const deleteCaseApi = createAsyncThunk<void, DeleteCaseApiBody>(
+export const deleteCaseApi = createAsyncThunk<undefined, DeleteCaseApiProps>(
   'cases/delete',
 
-  async (id, { rejectWithValue }) => {
+  async ({ setIsLoading, body: id }, { rejectWithValue }) => {
+    setIsLoading?.(prev => prev + 1)
+
     try {
-      await axios.delete<DeleteCaseApiOkResp>('/cases/' + id)
+      await axios.delete<DeleteCaseApiOkResp>(`/cases/${id}`)
     } catch (e) {
       const err = e as AxiosError<DeleteCaseApiErrResp>
       return rejectWithValue(err.response?.data || { message: ErrorMessages.Unknown })
+    } finally {
+      setIsLoading?.(prev => prev - 1)
     }
-  }
+  },
 )

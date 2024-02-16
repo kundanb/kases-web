@@ -1,16 +1,24 @@
-import { usePageLoader } from '@/app/pageLoader/pageLoaderSlice'
 import { useEffect } from 'react'
+import { useAppDispatch } from '@/app/store'
+import { bodyScrollbarActions } from '@/app/bodyScrollbar/bodyScrollbarSlice'
+import { usePageLoader } from '@/app/pageLoader/pageLoaderSlice'
 
 export default function PageLoader() {
+  const dispatch = useAppDispatch()
+
   const { isLoading } = usePageLoader()
 
   useEffect(() => {
-    if (isLoading > 0) {
-      document.body.style.overflow = 'hidden'
+    if (isLoading) {
+      dispatch(bodyScrollbarActions.hide())
     } else {
-      document.body.style.overflow = 'auto'
+      dispatch(bodyScrollbarActions.show())
     }
-  }, [isLoading])
+
+    return () => {
+      dispatch(bodyScrollbarActions.show())
+    }
+  }, [dispatch, isLoading])
 
   if (!isLoading) {
     return null

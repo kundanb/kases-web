@@ -1,21 +1,21 @@
-import { Form, Formik, FormikContextType } from 'formik'
+import { useState } from 'react'
+import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import FormikErrorFocus from 'formik-error-focus'
 import { toast } from 'react-toastify'
-import { ApiErrResp } from '@/utils/types'
+import type { ApiErrResp } from '@/utils/types'
 import { Routes } from '@/utils/consts'
 import { useAppDispatch } from '@/app/store'
-import { fetchMeApi, loginApi } from '@/app/auth/authApis'
+import { LoginApiProps, fetchMeApi, loginApi } from '@/app/auth/authApis'
 import Link from '@/components/Link'
 import ApiErrorToast from '@/components/Toasts'
 import * as FormElems from '@/components/Form'
 
-interface RegisterFormProps {
+interface FormVals {
   unique: string
   password: string
 }
 
-const initialValues: RegisterFormProps = {
+const formInitVals: FormVals = {
   unique: 'kundanb',
   password: 'd?mL6W5#5xv8M7?',
 }
@@ -23,8 +23,10 @@ const initialValues: RegisterFormProps = {
 export default function Login() {
   const dispatch = useAppDispatch()
 
+  const [isFormLoading, setIsFormLoading] = useState(0)
+
   return (
-    <div className="py-12">
+    <div className="py-8">
       <div className="container">
         <div className="max-w-md mx-auto text-center">
           <p className="flex justify-center items-center gap-2 text-sm">
@@ -40,25 +42,29 @@ export default function Login() {
 
           <div className="mt-8 card text-left">
             <Formik
-              initialValues={initialValues}
+              initialValues={formInitVals}
               enableReinitialize
               validateOnChange
               validationSchema={Yup.object({
-                unique: Yup.string().required('Please enter your username or email'),
-                password: Yup.string().required('Please enter your password'),
+                unique: Yup.string().required('Please enter your username or email.'),
+                password: Yup.string().required('Please enter your password.'),
               })}
-              onSubmit={async (values, { setSubmitting }) => {
+              onSubmit={async values => {
                 try {
-                  await dispatch(loginApi(values)).unwrap()
-                  await dispatch(fetchMeApi()).unwrap()
+                  const body: LoginApiProps['body'] = {
+                    unique: values.unique,
+                    password: values.password,
+                  }
+
+                  await dispatch(loginApi({ setIsLoading: setIsFormLoading, body })).unwrap()
+                  toast.success('Logged in successfully')
+                  await dispatch(fetchMeApi({ setIsLoading: setIsFormLoading })).unwrap()
                 } catch (e) {
                   toast.error(ApiErrorToast(e as ApiErrResp))
-                } finally {
-                  setSubmitting(false)
                 }
               }}
             >
-              {({ values, touched, errors, handleChange, handleSubmit, isSubmitting }) => (
+              {({ values, touched, errors, handleChange, handleSubmit }) => (
                 <Form className="flex flex-col gap-8" onSubmit={handleSubmit} autoComplete="off">
                   <FormElems.Field>
                     <FormElems.Label htmlFor="unique">Username or Email</FormElems.Label>
@@ -69,7 +75,7 @@ export default function Login() {
                       value={values.unique}
                       onChange={handleChange}
                       hasError={touched.unique && !!errors.unique}
-                      disabled={isSubmitting}
+                      disabled={!!isFormLoading}
                       autoFocus
                     />
                     <FormElems.ErrMsg name="unique" />
@@ -84,24 +90,18 @@ export default function Login() {
                       value={values.password}
                       onChange={handleChange}
                       hasError={touched.password && !!errors.password}
-                      disabled={isSubmitting}
+                      disabled={!!isFormLoading}
                     />
                     <FormElems.ErrMsg name="password" />
                   </FormElems.Field>
 
                   <FormElems.Field>
-                    <button type="submit" className="btn btn-prim" disabled={isSubmitting}>
-                      {isSubmitting && <span className="spinner spinner-light"></span>} Login
+                    <button type="submit" className="btn btn-prim" disabled={!!isFormLoading}>
+                      {!!isFormLoading && <span className="spinner spinner-light"></span>} Login
                     </button>
                   </FormElems.Field>
 
-                  <FormikErrorFocus
-                    offset={0}
-                    align="middle"
-                    focusDelay={0}
-                    duration={150}
-                    formik={{} as FormikContextType<object>}
-                  />
+                  <FormElems.ErrorFocus />
                 </Form>
               )}
             </Formik>

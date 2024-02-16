@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import cn from 'classnames'
+import { toast } from 'react-toastify'
 import Logo from '@/assets/logo-dark.svg'
 import AvatarImg from '@/assets/avatar.svg'
 import { Routes } from '@/utils/consts'
+import { getOutsideClickHandler } from '@/utils/funcs'
 import { useAppDispatch } from '@/app/store'
 import { authActions, useAuth } from '@/app/auth/authSlice'
 import Link from '../Link'
@@ -14,12 +16,27 @@ export default function Header() {
   const auth = useAuth()
 
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false)
 
   const { pathname } = useLocation()
 
   useEffect(() => {
     setIsUserMenuOpen(false)
+    setIsCreateMenuOpen(false)
   }, [pathname])
+
+  useEffect(() => {
+    const userMenuHandleClick = getOutsideClickHandler('.header-user-menu', setIsUserMenuOpen)
+    const createMenuHandleClick = getOutsideClickHandler('.header-create-menu', setIsCreateMenuOpen)
+
+    document.addEventListener('click', userMenuHandleClick)
+    document.addEventListener('click', createMenuHandleClick)
+
+    return () => {
+      document.removeEventListener('click', userMenuHandleClick)
+      document.removeEventListener('click', createMenuHandleClick)
+    }
+  }, [])
 
   return (
     <header className="sticky top-0 z-header h-16 bg-light border-t-4 border-t-misc border-b">
@@ -49,63 +66,75 @@ export default function Header() {
               </Link>
             </>
           ) : (
-            <div className="relative">
-              <button
-                className={cn(
-                  'px-3 h-12 rounded text-light focus:ring flex items-center gap-2',
-                  'bg-prim hover:bg-prim-acc',
-                  'focus:bg-gradient-to-br focus:from-prim focus:to-prim-acc',
-                  { 'bg-gradient-to-br from-prim to-prim-acc': isUserMenuOpen }
+            <>
+              <div className="header-create-menu relative">
+                <button
+                  className={cn('btn btn-sm btn-light border', {
+                    'bg-light-acc': isCreateMenuOpen,
+                  })}
+                  onClick={() => setIsCreateMenuOpen(prev => !prev)}
+                >
+                  <i className="fi fi-rr-plus"></i>
+                  {!isCreateMenuOpen ? <i className="fi fi-rs-caret-down"></i> : <i className="fi fi-rs-caret-up"></i>}
+                </button>
+
+                {isCreateMenuOpen && (
+                  <div className="absolute top-full right-0 mt-2 p-4 bg-light rounded border shadow-xl flex flex-col gap-1">
+                    <DropdownMenuLink to={Routes.CreateCase} icon="fi fi-rr-auction" text="New Case" />
+                    <DropdownMenuLink to={Routes.CreateHearing} icon="fi fi-rr-ear" text="New Hearing" />
+                    <DropdownMenuLink to={Routes.CreateTodo} icon="fi fi-rr-rectangle-list" text="New Todo" />
+                  </div>
                 )}
-                onClick={() => setIsUserMenuOpen(prev => !prev)}
-              >
-                <img src={AvatarImg} alt="Avatar" className="size-8 rounded-full border-2 border-light" />
+              </div>
 
-                <span className="text-left font-disp flex flex-col">
-                  {auth.user?.name ? (
-                    <>
-                      <span className="font-medium">{auth.user?.name}</span>
-                      <span className="text-xs text-light/70">{auth.user?.username}</span>
-                    </>
-                  ) : (
-                    <span className="font-medium">{auth.user?.username}</span>
-                  )}
-                </span>
+              <div className="header-user-menu relative flex">
+                <button
+                  className={cn('p-1 rounded-full bg-prim hover:bg-prim-acc focus:bg-prim-acc', {
+                    'bg-gradient-to-br from-prim to-prim-acc': isUserMenuOpen,
+                  })}
+                  onClick={() => setIsUserMenuOpen(prev => !prev)}
+                >
+                  <img src={AvatarImg} alt="Avatar" className="size-9 rounded-full" />
+                </button>
 
-                <span className="text-sm">
-                  <i className="fi fi-rs-angle-down"></i>
-                </span>
-              </button>
+                {isUserMenuOpen && (
+                  <div className="absolute top-full right-0 mt-2 p-4 bg-light rounded border shadow-xl flex flex-col gap-1">
+                    <DropdownMenuLink to={Routes.MyDashboard} icon="fi fi-rr-dashboard" text="Dashboard" />
+                    <DropdownMenuLink to={Routes.MyProfile} icon="fi fi-rr-user" text="Profile" />
+                    <DropdownMenuLink to={Routes.MySettings} icon="fi fi-rr-settings" text="Settings" />
 
-              {isUserMenuOpen && (
-                <div className="absolute top-full right-0 mt-2 p-4 bg-light rounded shadow-xl flex flex-col gap-2">
-                  <Link
-                    to={Routes.MyProfile}
-                    className="text-dark/70 hover:text-dark focus:text-dark rounded focus:ring flex items-center gap-3"
-                  >
-                    <i className="fi fi-rr-user"></i> Profile
-                  </Link>
-                  <Link
-                    to={Routes.MySettings}
-                    className="text-dark/70 hover:text-dark focus:text-dark rounded focus:ring flex items-center gap-3"
-                  >
-                    <i className="fi fi-rr-settings"></i> Settings
-                  </Link>
+                    <div className="my-2 border-b"></div>
 
-                  <div className="my-2 border-b"></div>
-
-                  <button
-                    className="btn btn-outline btn-outline-dark focus:ring flex items-center"
-                    onClick={() => dispatch(authActions.logout())}
-                  >
-                    <i className="fi fi-rr-sign-out-alt"></i> Logout
-                  </button>
-                </div>
-              )}
-            </div>
+                    <button
+                      className="btn btn-outline btn-outline-dark flex items-center"
+                      onClick={() => {
+                        dispatch(authActions.logout())
+                        toast.success('Logged out successfully')
+                      }}
+                    >
+                      <i className="fi fi-rr-sign-out-alt"></i> Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
           )}
         </nav>
       </div>
     </header>
+  )
+}
+
+interface DropdownMenuLinkProps {
+  to: string
+  icon: string
+  text: string
+}
+
+const DropdownMenuLink = ({ to, icon, text }: DropdownMenuLinkProps) => {
+  return (
+    <Link to={to} className="btn btn-sm btn-light justify-start text-dark/70 hover:text-dark focus:text-dark">
+      <i className={icon}></i> <span className="text-nowrap">{text}</span>
+    </Link>
   )
 }

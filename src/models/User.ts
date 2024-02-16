@@ -6,11 +6,11 @@ export interface RespUser {
   id: number
   role: UserRole
   username: string
-  email?: string
-  email_verified_at?: string
-  name?: string
-  avatar?: string
-  bio?: string
+  email?: string | null
+  email_verified_at?: string | null
+  name?: string | null
+  avatar?: string | null
+  bio?: string | null
   created_at: string
   updated_at: string
 }
@@ -19,11 +19,11 @@ export default class User {
   id: number
   role: UserRole
   username: string
-  email?: string
-  emailVerifiedAt?: moment.Moment
-  name?: string
-  avatar?: string
-  bio?: string
+  email?: string | null
+  emailVerifiedAt?: string | null
+  name?: string | null
+  avatar?: string | null
+  bio?: string | null
   createdAt: string
   updatedAt: string
 
@@ -46,7 +46,7 @@ export default class User {
       role: respUser.role,
       username: respUser.username,
       email: respUser.email,
-      emailVerifiedAt: respUser.email_verified_at ? moment(respUser.email_verified_at, DateTimeFormat) : undefined,
+      emailVerifiedAt: respUser.email_verified_at && moment(respUser.email_verified_at, DateTimeFormat).toISOString(),
       name: respUser.name,
       avatar: respUser.avatar,
       bio: respUser.bio,

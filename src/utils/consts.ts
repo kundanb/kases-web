@@ -8,14 +8,14 @@ export const Routes = {
   MySettings: '/me/settings',
   CreateCase: '/me/cases/new',
   MyCases: '/me/cases',
-  MyCase: (id: number) => '/me/cases/' + (id || ':id'),
-  EditCase: (id: number) => '/me/cases/' + (id || ':id') + '/edit',
+  MyCase: (id?: number) => '/me/cases/' + (id ?? ':id'),
+  EditCase: (id?: number) => '/me/cases/' + (id ?? ':id') + '/edit',
   CreateHearing: '/me/hearings/new',
   MyHearings: '/me/hearings',
-  MyHearing: (id: number) => '/me/hearings/' + (id || ':id'),
+  MyHearing: (id?: number) => '/me/hearings/' + (id ?? ':id'),
   CreateTodo: '/me/todos/new',
   MyTodos: '/me/todos',
-  MyTodo: (id: number) => '/me/todos/' + (id || ':id'),
+  MyTodo: (id?: number) => '/me/todos/' + (id ?? ':id'),
 }
 
 export const StorageKeys = {
