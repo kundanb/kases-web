@@ -16,7 +16,7 @@ interface RouteParams {
 }
 
 interface FormVals {
-  id?: number
+  caseId?: number
   caseNumber: string
   court: string
   title: string
@@ -53,7 +53,7 @@ export default function CreateEditCase() {
           const data = await dispatch(myCaseApi({ setIsLoading: setIsCaseLoading, body: +params.id! })).unwrap()
 
           setInitFormVals({
-            id: data.id,
+            caseId: data.id,
             caseNumber: data.caseNumber,
             court: data.court,
             title: data.title,
@@ -110,7 +110,7 @@ export default function CreateEditCase() {
                     history.push(Routes.MyCases)
                   } else {
                     const body: UpdateCaseApiProps['body'] = {
-                      id: values.id!,
+                      caseId: values.caseId!,
                       caseCaseNumber: values.caseNumber,
                       caseCourt: values.court,
                       caseTitle: values.title,
