@@ -8,7 +8,6 @@ export type CreateHearingApiProps = ApiBasePropsWithBody<{
   hearingCaseId: number
   hearingDate: string
   hearingDescription?: string | null
-  hearingPreviousId?: number | null
 }>
 
 export type CreateHearingApiOkResp = ApiOkResp
@@ -85,7 +84,6 @@ export type UpdateHearingApiProps = ApiBasePropsWithBody<{
   hearingId: number
   hearingDate: string
   hearingDescription?: string | null
-  hearingPreviousId?: number | null
 }>
 
 export type UpdateHearingApiOkResp = ApiOkResp

@@ -44,7 +44,7 @@ export default function MyHearings() {
     {
       title: 'Hearing Date',
       key: 'date',
-      render: date => <span className="text-nowrap">{moment.utc(date as string).format('ll')}</span>,
+      render: date => <span className="text-nowrap">{moment(date as string).format('ll')}</span>,
     },
     {
       title: 'Actions',

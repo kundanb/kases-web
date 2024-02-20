@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import cn from 'classnames'
 import moment from 'moment'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 import type { ApiErrResp } from '@/utils/types'
-import { Routes } from '@/utils/consts'
+import { DateFormat, Routes } from '@/utils/consts'
 import { useAppDispatch } from '@/app/store'
 import { myCasesApi } from '@/app/cases/casesApi'
 import {
@@ -28,7 +29,6 @@ interface FormVals {
   caseId: FormElems.SelectValue<number> | null
   date: string
   description: string
-  previousId: FormElems.SelectValue<number> | null
 }
 
 export default function CreateEditHearing() {
@@ -42,7 +42,6 @@ export default function CreateEditHearing() {
     caseId: null,
     date: '',
     description: '',
-    previousId: null,
   })
 
   const [isEdit, setIsEdit] = useState(false)
@@ -66,7 +65,6 @@ export default function CreateEditHearing() {
             caseId: { label: data.case$!.title, value: data.case$!.id },
             date: moment(data.date).format('YYYY-MM-DD'),
             description: data.description || '',
-            previousId: data.previousId ? { label: data.previous$!.date, value: data.previous$!.id } : null,
           })
         } catch (e) {
           toast.error(ApiErrorToast(e as ApiErrResp))
@@ -98,7 +96,9 @@ export default function CreateEditHearing() {
               validateOnChange
               validationSchema={Yup.object({
                 caseId: Yup.object().required('Case is required'),
-                date: Yup.string().required('Date is required'),
+                date: Yup.date()
+                  .required('Date is required')
+                  .min(moment().add(1, 'days').format('YYYY-MM-DD'), 'Date must be at least tomorrow'),
                 description: Yup.string(),
                 previousId: Yup.object().nullable(),
               })}
@@ -111,7 +111,6 @@ export default function CreateEditHearing() {
                       hearingCaseId: values.caseId!.value,
                       hearingDate: values.date,
                       hearingDescription: values.description,
-                      hearingPreviousId: values.previousId?.value || null,
                     }
 
                     await dispatch(createHearingApi({ setIsLoading, body })).unwrap()
@@ -123,7 +122,6 @@ export default function CreateEditHearing() {
                       hearingId: values.id!,
                       hearingDate: values.date,
                       hearingDescription: values.description,
-                      hearingPreviousId: values.previousId?.value || null,
                     }
 
                     await dispatch(updateHearingApi({ setIsLoading, body })).unwrap()
@@ -164,13 +162,25 @@ export default function CreateEditHearing() {
                     </FormElems.Field>
 
                     <FormElems.Field className="flex-1">
-                      <FormElems.Label htmlFor="date">Date</FormElems.Label>
+                      <div className="flex justify-between items-center">
+                        <FormElems.Label htmlFor="date">Date</FormElems.Label>
+                        <span
+                          className={cn('tag tag-xs font-medium', {
+                            'tag-danger': moment(values.date, DateFormat).format('d') === '0',
+                            'tag-success': moment(values.date, DateFormat).format('d') !== '0',
+                          })}
+                        >
+                          {values.date && moment(values.date, DateFormat).format('dddd')}
+                        </span>
+                      </div>
+
                       <FormElems.Input
                         type="date"
                         id="date"
                         name="date"
                         placeholder="Enter the date"
                         value={values.date}
+                        min={moment().add(1, 'days').format('YYYY-MM-DD')}
                         onChange={handleChange}
                         hasError={touched.date && !!errors.date}
                         disabled={!!isFormLoading}

@@ -29,3 +29,4 @@ export const ErrorMessages = {
 }
 
 export const DateTimeFormat = 'YYYY-MM-DD HH:mm:ss'
+export const DateFormat = 'YYYY-MM-DD'

@@ -45,12 +45,12 @@ export default class Hearing {
     return new Hearing({
       id: +respHearing.hearingId,
       caseId: +respHearing.hearingCaseId,
-      date: moment.utc(respHearing.hearingDate, DateTimeFormat).toISOString(),
+      date: moment(respHearing.hearingDate, DateTimeFormat).toISOString(),
       description: respHearing.hearingDescription,
       previousId: respHearing.hearingPreviousId,
-      createdAt: moment.utc(respHearing.hearingCreatedAt, DateTimeFormat).toISOString(),
-      updatedAt: moment.utc(respHearing.hearingUpdatedAt, DateTimeFormat).toISOString(),
-      deletedAt: respHearing.hearingDeletedAt && moment.utc(respHearing.hearingDeletedAt, DateTimeFormat).toISOString(),
+      createdAt: moment(respHearing.hearingCreatedAt, DateTimeFormat).toISOString(),
+      updatedAt: moment(respHearing.hearingUpdatedAt, DateTimeFormat).toISOString(),
+      deletedAt: respHearing.hearingDeletedAt && moment(respHearing.hearingDeletedAt, DateTimeFormat).toISOString(),
       case$: respHearing.hearingCase$ ? Case.fromResp(respHearing.hearingCase$) : null,
     })
   }

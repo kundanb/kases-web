@@ -53,9 +53,9 @@ export default class Case {
       title: respCase.caseTitle,
       description: respCase.caseDescription,
       status: +respCase.caseStatus,
-      createdAt: moment.utc(respCase.caseCreatedAt, DateTimeFormat).toISOString(),
-      updatedAt: moment.utc(respCase.caseUpdatedAt, DateTimeFormat).toISOString(),
-      deletedAt: respCase.caseDeletedAt && moment.utc(respCase.caseDeletedAt, DateTimeFormat).toISOString(),
+      createdAt: moment(respCase.caseCreatedAt, DateTimeFormat).toISOString(),
+      updatedAt: moment(respCase.caseUpdatedAt, DateTimeFormat).toISOString(),
+      deletedAt: respCase.caseDeletedAt && moment(respCase.caseDeletedAt, DateTimeFormat).toISOString(),
     })
   }
 }

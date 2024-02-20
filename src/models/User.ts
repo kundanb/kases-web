@@ -54,9 +54,9 @@ export default class User {
       name: respUser.userName,
       avatar: respUser.userAvatar,
       bio: respUser.userBio,
-      createdAt: moment.utc(respUser.userCreatedAt, DateTimeFormat).toISOString(),
-      updatedAt: moment.utc(respUser.userUpdatedAt, DateTimeFormat).toISOString(),
-      deletedAt: respUser.userDeletedAt && moment.utc(respUser.userDeletedAt, DateTimeFormat).toISOString(),
+      createdAt: moment(respUser.userCreatedAt, DateTimeFormat).toISOString(),
+      updatedAt: moment(respUser.userUpdatedAt, DateTimeFormat).toISOString(),
+      deletedAt: respUser.userDeletedAt && moment(respUser.userDeletedAt, DateTimeFormat).toISOString(),
     })
   }
 }
