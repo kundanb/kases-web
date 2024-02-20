@@ -11,13 +11,13 @@ import ApiErrorToast from '@/components/Toasts'
 import * as FormElems from '@/components/Form'
 
 interface FormVals {
-  unique: string
-  password: string
+  userUnique: string
+  userPassword: string
 }
 
 const formInitVals: FormVals = {
-  unique: 'kundanb',
-  password: 'd?mL6W5#5xv8M7?',
+  userUnique: 'kundanb',
+  userPassword: 'd?mL6W5#5xv8M7?',
 }
 
 export default function Login() {
@@ -46,14 +46,14 @@ export default function Login() {
               enableReinitialize
               validateOnChange
               validationSchema={Yup.object({
-                unique: Yup.string().required('Please enter your username or email.'),
-                password: Yup.string().required('Please enter your password.'),
+                userUnique: Yup.string().required('Please enter your username or email.'),
+                userPassword: Yup.string().required('Please enter your password.'),
               })}
               onSubmit={async values => {
                 try {
                   const body: LoginApiProps['body'] = {
-                    unique: values.unique,
-                    password: values.password,
+                    userUnique: values.userUnique,
+                    userPassword: values.userPassword,
                   }
 
                   await dispatch(loginApi({ setIsLoading: setIsFormLoading, body })).unwrap()
@@ -67,32 +67,32 @@ export default function Login() {
               {({ values, touched, errors, handleChange, handleSubmit }) => (
                 <Form className="flex flex-col gap-8" onSubmit={handleSubmit} autoComplete="off">
                   <FormElems.Field>
-                    <FormElems.Label htmlFor="unique">Username or Email</FormElems.Label>
+                    <FormElems.Label htmlFor="userUnique">Username or Email</FormElems.Label>
                     <FormElems.Input
-                      id="unique"
-                      name="unique"
+                      id="userUnique"
+                      name="userUnique"
                       placeholder="Enter your Username or Email"
-                      value={values.unique}
+                      value={values.userUnique}
                       onChange={handleChange}
-                      hasError={touched.unique && !!errors.unique}
+                      hasError={touched.userUnique && !!errors.userUnique}
                       disabled={!!isFormLoading}
                       autoFocus
                     />
-                    <FormElems.ErrMsg name="unique" />
+                    <FormElems.ErrMsg name="userUnique" />
                   </FormElems.Field>
 
                   <FormElems.Field>
-                    <FormElems.Label htmlFor="password">Password</FormElems.Label>
+                    <FormElems.Label htmlFor="userPassword">Password</FormElems.Label>
                     <FormElems.Password
-                      id="password"
-                      name="password"
+                      id="userPassword"
+                      name="userPassword"
                       placeholder="Create a Password"
-                      value={values.password}
+                      value={values.userPassword}
                       onChange={handleChange}
-                      hasError={touched.password && !!errors.password}
+                      hasError={touched.userPassword && !!errors.userPassword}
                       disabled={!!isFormLoading}
                     />
-                    <FormElems.ErrMsg name="password" />
+                    <FormElems.ErrMsg name="userPassword" />
                   </FormElems.Field>
 
                   <FormElems.Field>

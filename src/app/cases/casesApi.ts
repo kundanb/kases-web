@@ -66,11 +66,11 @@ export type MyCaseApiErrResp = ApiErrResp
 export const myCaseApi = createAsyncThunk<Case, MyCaseApiProps>(
   'cases/my',
 
-  async ({ setIsLoading, body: id }, { rejectWithValue }) => {
+  async ({ setIsLoading, body: caseId }, { rejectWithValue }) => {
     setIsLoading?.(prev => prev + 1)
 
     try {
-      const { data } = await axios.get<MyCaseApiOkResp>(`/cases/${id}`)
+      const { data } = await axios.get<MyCaseApiOkResp>(`/cases/${caseId}`)
       return { ...Case.fromResp(data.data!) }
     } catch (e) {
       const err = e as AxiosError<MyCaseApiErrResp>
@@ -82,7 +82,7 @@ export const myCaseApi = createAsyncThunk<Case, MyCaseApiProps>(
 )
 
 export type UpdateCaseApiProps = ApiBasePropsWithBody<{
-  id: number
+  caseId: number
   caseCaseNumber: string
   caseCourt: string
   caseTitle: string
@@ -90,16 +90,16 @@ export type UpdateCaseApiProps = ApiBasePropsWithBody<{
 }>
 
 export type UpdateCaseApiOkResp = ApiOkResp
-export type UpdateCaseApiErrResp = ApiErrResp<Omit<UpdateCaseApiProps['body'], 'id'>>
+export type UpdateCaseApiErrResp = ApiErrResp<Omit<UpdateCaseApiProps['body'], 'caseId'>>
 
 export const updateCaseApi = createAsyncThunk<undefined, UpdateCaseApiProps>(
   'cases/update',
 
-  async ({ setIsLoading, body: { id, ...body } }, { rejectWithValue }) => {
+  async ({ setIsLoading, body: { caseId, ...body } }, { rejectWithValue }) => {
     setIsLoading?.(prev => prev + 1)
 
     try {
-      await axios.put<UpdateCaseApiOkResp>(`/cases/${id}`, body)
+      await axios.put<UpdateCaseApiOkResp>(`/cases/${caseId}`, body)
     } catch (e) {
       const err = e as AxiosError<UpdateCaseApiErrResp>
       return rejectWithValue(err.response?.data || { message: ErrorMessages.Unknown })
@@ -117,11 +117,11 @@ export type DeleteCaseApiErrResp = ApiErrResp
 export const deleteCaseApi = createAsyncThunk<undefined, DeleteCaseApiProps>(
   'cases/delete',
 
-  async ({ setIsLoading, body: id }, { rejectWithValue }) => {
+  async ({ setIsLoading, body: caseId }, { rejectWithValue }) => {
     setIsLoading?.(prev => prev + 1)
 
     try {
-      await axios.delete<DeleteCaseApiOkResp>(`/cases/${id}`)
+      await axios.delete<DeleteCaseApiOkResp>(`/cases/${caseId}`)
     } catch (e) {
       const err = e as AxiosError<DeleteCaseApiErrResp>
       return rejectWithValue(err.response?.data || { message: ErrorMessages.Unknown })

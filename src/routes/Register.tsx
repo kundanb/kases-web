@@ -12,19 +12,19 @@ import ApiErrorToast from '@/components/Toasts'
 import * as FormElems from '@/components/Form'
 
 interface FormVals {
-  role: UserRole | undefined
-  username: string
-  email: string
-  password: string
-  confirmPassword: string
+  userRole: UserRole | undefined
+  userUsername: string
+  userEmail: string
+  userPassword: string
+  userConfirmPassword: string
 }
 
 const formInitVals: FormVals = {
-  role: undefined,
-  username: 'kundanb',
-  email: 'kundanbhasin11062000@gmail.com',
-  password: 'd?mL6W5#5xv8M7?',
-  confirmPassword: 'd?mL6W5#5xv8M7?',
+  userRole: undefined,
+  userUsername: 'kundanb',
+  userEmail: 'kundanbhasin11062000@gmail.com',
+  userPassword: 'd?mL6W5#5xv8M7?',
+  userConfirmPassword: 'd?mL6W5#5xv8M7?',
 }
 
 export default function Register() {
@@ -55,33 +55,33 @@ export default function Register() {
               enableReinitialize
               validateOnChange
               validationSchema={Yup.object({
-                role: Yup.mixed<UserRole>()
+                userRole: Yup.mixed<UserRole>()
                   .required('Please select a role.')
                   .oneOf([UserRole.Lawyer, UserRole.Client], 'Please select a valid role.'),
 
-                username: Yup.string()
+                userUsername: Yup.string()
                   .required('Please create a new username.')
                   .min(6, 'Username must be at least 6 characters.')
                   .matches(/^\w+$/, 'Username can only contain letters, numbers, and underscores.')
                   .matches(/[a-zA-Z]/, 'Username must contain at least 1 letter.'),
 
-                email: Yup.string().required('Please enter your email').email('Please enter a valid email.'),
+                userEmail: Yup.string().required('Please enter your email').email('Please enter a valid email.'),
 
-                password: Yup.string()
+                userPassword: Yup.string()
                   .required('Please create a new password.')
                   .min(8, 'Password must be at least 8 characters.'),
 
-                confirmPassword: Yup.string()
+                userConfirmPassword: Yup.string()
                   .required('Please retype your password.')
-                  .oneOf([Yup.ref('password')], 'Passwords do not match.'),
+                  .oneOf([Yup.ref('userPassword')], 'Passwords do not match.'),
               })}
               onSubmit={async values => {
                 try {
                   const body: RegisterApiProps['body'] = {
-                    role: values.role!,
-                    username: values.username,
-                    email: values.email,
-                    password: values.password,
+                    userRole: values.userRole!,
+                    userUsername: values.userUsername,
+                    userEmail: values.userEmail,
+                    userPassword: values.userPassword,
                   }
 
                   await dispatch(registerApi({ setIsLoading: setIsFormLoading, body })).unwrap()
@@ -102,72 +102,72 @@ export default function Register() {
                         { label: 'Lawyer', value: UserRole.Lawyer },
                         { label: 'Client', value: UserRole.Client },
                       ]}
-                      name="role"
-                      value={values.role}
+                      name="userRole"
+                      value={values.userRole}
                       onChange={e => e.target.checked && setFieldValue(e.target.name, +e.target.value)}
                       disabled={!!isFormLoading}
-                      hasError={touched.role && !!errors.role}
+                      hasError={touched.userRole && !!errors.userRole}
                     />
 
-                    <FormElems.ErrMsg name="role" />
+                    <FormElems.ErrMsg name="userRole" />
                   </FormElems.Field>
 
                   <FormElems.Field>
-                    <FormElems.Label htmlFor="username">Username</FormElems.Label>
+                    <FormElems.Label htmlFor="userUsername">Username</FormElems.Label>
                     <FormElems.Input
-                      id="username"
-                      name="username"
+                      id="userUsername"
+                      name="userUsername"
                       placeholder="Create a Username"
-                      value={values.username}
+                      value={values.userUsername}
                       onChange={handleChange}
-                      hasError={touched.username && !!errors.username}
+                      hasError={touched.userUsername && !!errors.userUsername}
                       disabled={!!isFormLoading}
                       autoFocus
                     />
-                    <FormElems.ErrMsg name="username" />
+                    <FormElems.ErrMsg name="userUsername" />
                   </FormElems.Field>
 
                   <FormElems.Field>
-                    <FormElems.Label htmlFor="email">Email</FormElems.Label>
+                    <FormElems.Label htmlFor="userEmail">Email</FormElems.Label>
                     <FormElems.Input
-                      type="email"
-                      id="email"
-                      name="email"
+                      type="userEmail"
+                      id="userEmail"
+                      name="userEmail"
                       placeholder="Enter your Email"
-                      value={values.email}
+                      value={values.userEmail}
                       onChange={handleChange}
-                      hasError={touched.email && !!errors.email}
+                      hasError={touched.userEmail && !!errors.userEmail}
                       disabled={!!isFormLoading}
                     />
-                    <FormElems.ErrMsg name="email" />
+                    <FormElems.ErrMsg name="userEmail" />
                   </FormElems.Field>
 
                   <FormElems.Field>
-                    <FormElems.Label htmlFor="password">Password</FormElems.Label>
+                    <FormElems.Label htmlFor="userPassword">Password</FormElems.Label>
                     <FormElems.Password
-                      id="password"
-                      name="password"
+                      id="userPassword"
+                      name="userPassword"
                       placeholder="Create a Password"
-                      value={values.password}
+                      value={values.userPassword}
                       onChange={handleChange}
-                      hasError={touched.password && !!errors.password}
+                      hasError={touched.userPassword && !!errors.userPassword}
                       disabled={!!isFormLoading}
                     />
-                    <FormElems.ErrMsg name="password" />
+                    <FormElems.ErrMsg name="userPassword" />
                   </FormElems.Field>
 
                   <FormElems.Field>
-                    <FormElems.Label htmlFor="confirmPassword">Confirm Password</FormElems.Label>
+                    <FormElems.Label htmlFor="userConfirmPassword">Confirm Password</FormElems.Label>
                     <FormElems.Password
-                      id="confirmPassword"
-                      name="confirmPassword"
+                      id="userConfirmPassword"
+                      name="userConfirmPassword"
                       placeholder="Retype your Password"
-                      value={values.confirmPassword}
+                      value={values.userConfirmPassword}
                       onChange={handleChange}
-                      hasError={touched.confirmPassword && !!errors.confirmPassword}
+                      hasError={touched.userConfirmPassword && !!errors.userConfirmPassword}
                       disabled={!!isFormLoading}
                     />
-                    <FormElems.ErrMsg name="confirmPassword" />
+                    <FormElems.ErrMsg name="userConfirmPassword" />
                   </FormElems.Field>
 
                   <FormElems.Field>

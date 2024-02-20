@@ -65,11 +65,11 @@ export type MyHearingApiErrResp = ApiErrResp
 export const myHearingApi = createAsyncThunk<Hearing, MyHearingApiProps>(
   'hearings/my',
 
-  async ({ setIsLoading, body: id }, { rejectWithValue }) => {
+  async ({ setIsLoading, body: hearingId }, { rejectWithValue }) => {
     setIsLoading?.(prev => prev + 1)
 
     try {
-      const { data } = await axios.get<MyHearingApiOkResp>(`/hearings/${id}`)
+      const { data } = await axios.get<MyHearingApiOkResp>(`/hearings/${hearingId}`)
       return { ...Hearing.fromResp(data.data!) }
     } catch (e) {
       const err = e as AxiosError<MyHearingApiErrResp>
@@ -87,16 +87,16 @@ export type UpdateHearingApiProps = ApiBasePropsWithBody<{
 }>
 
 export type UpdateHearingApiOkResp = ApiOkResp
-export type UpdateHearingApiErrResp = ApiErrResp<Omit<UpdateHearingApiProps['body'], 'id'>>
+export type UpdateHearingApiErrResp = ApiErrResp<Omit<UpdateHearingApiProps['body'], 'hearingId'>>
 
 export const updateHearingApi = createAsyncThunk<undefined, UpdateHearingApiProps>(
   'hearings/update',
 
-  async ({ setIsLoading, body: { hearingId: id, ...body } }, { rejectWithValue }) => {
+  async ({ setIsLoading, body: { hearingId, ...body } }, { rejectWithValue }) => {
     setIsLoading?.(prev => prev + 1)
 
     try {
-      await axios.put<UpdateHearingApiOkResp>(`/hearings/${id}`, body)
+      await axios.put<UpdateHearingApiOkResp>(`/hearings/${hearingId}`, body)
     } catch (e) {
       const err = e as AxiosError<UpdateHearingApiErrResp>
       return rejectWithValue(err.response?.data || { message: ErrorMessages.Unknown })
@@ -114,11 +114,11 @@ export type DeleteHearingApiErrResp = ApiErrResp
 export const deleteHearingApi = createAsyncThunk<undefined, DeleteHearingApiProps>(
   'hearings/delete',
 
-  async ({ setIsLoading, body: id }, { rejectWithValue }) => {
+  async ({ setIsLoading, body: hearingId }, { rejectWithValue }) => {
     setIsLoading?.(prev => prev + 1)
 
     try {
-      await axios.delete<DeleteHearingApiOkResp>(`/hearings/${id}`)
+      await axios.delete<DeleteHearingApiOkResp>(`/hearings/${hearingId}`)
     } catch (e) {
       const err = e as AxiosError<DeleteHearingApiErrResp>
       return rejectWithValue(err.response?.data || { message: ErrorMessages.Unknown })

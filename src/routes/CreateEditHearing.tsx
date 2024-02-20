@@ -164,14 +164,17 @@ export default function CreateEditHearing() {
                     <FormElems.Field className="flex-1">
                       <div className="flex justify-between items-center">
                         <FormElems.Label htmlFor="date">Date</FormElems.Label>
-                        <span
-                          className={cn('tag tag-xs font-medium', {
-                            'tag-danger': moment(values.date, DateFormat).format('d') === '0',
-                            'tag-success': moment(values.date, DateFormat).format('d') !== '0',
-                          })}
-                        >
-                          {values.date && moment(values.date, DateFormat).format('dddd')}
-                        </span>
+
+                        {values.date && (
+                          <span
+                            className={cn('tag tag-xs font-medium', {
+                              'tag-danger': moment(values.date, DateFormat).format('d') === '0',
+                              'tag-success': moment(values.date, DateFormat).format('d') !== '0',
+                            })}
+                          >
+                            {moment(values.date, DateFormat).format('dddd')}
+                          </span>
+                        )}
                       </div>
 
                       <FormElems.Input

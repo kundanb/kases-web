@@ -9,10 +9,10 @@ import { pageLoaderActions } from '../pageLoader/pageLoaderSlice'
 import { authActions } from './authSlice'
 
 export type RegisterApiProps = ApiBasePropsWithBody<{
-  role: UserRole
-  username: string
-  email: string
-  password: string
+  userRole: UserRole
+  userUsername: string
+  userEmail: string
+  userPassword: string
 }>
 
 export interface RegisterApiRespData {
@@ -41,8 +41,8 @@ export const registerApi = createAsyncThunk<undefined, RegisterApiProps>(
 )
 
 export type LoginApiProps = ApiBasePropsWithBody<{
-  unique: string
-  password: string
+  userUnique: string
+  userPassword: string
 }>
 
 export interface LoginApiRespData {
