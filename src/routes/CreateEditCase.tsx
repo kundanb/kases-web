@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import type { ApiErrResp } from '@/utils/types'
 import { Routes } from '@/utils/consts'
 import { useAppDispatch } from '@/app/store'
-import { createCaseApi, myCaseApi, updateCaseApi } from '@/app/cases/casesApi'
+import { CreateCaseApiProps, UpdateCaseApiProps, createCaseApi, myCaseApi, updateCaseApi } from '@/app/cases/casesApi'
 import Link from '@/components/Link'
 import ApiErrorToast from '@/components/Toasts'
 import * as FormElems from '@/components/Form'
@@ -18,6 +18,7 @@ interface RouteParams {
 interface FormVals {
   id?: number
   caseNumber: string
+  court: string
   title: string
   description: string
 }
@@ -30,6 +31,7 @@ export default function CreateEditCase() {
 
   const [initFormVals, setInitFormVals] = useState<FormVals>({
     caseNumber: '',
+    court: '',
     title: '',
     description: '',
   })
@@ -53,6 +55,7 @@ export default function CreateEditCase() {
           setInitFormVals({
             id: data.id,
             caseNumber: data.caseNumber,
+            court: data.court,
             title: data.title,
             description: data.description || '',
           })
@@ -94,10 +97,11 @@ export default function CreateEditCase() {
 
                 try {
                   if (!isEdit) {
-                    const body = {
-                      case_number: values.caseNumber,
-                      title: values.title,
-                      description: values.description,
+                    const body: CreateCaseApiProps['body'] = {
+                      caseCaseNumber: values.caseNumber,
+                      caseCourt: values.court,
+                      caseTitle: values.title,
+                      caseDescription: values.description,
                     }
 
                     await dispatch(createCaseApi({ setIsLoading, body })).unwrap()
@@ -105,11 +109,12 @@ export default function CreateEditCase() {
 
                     history.push(Routes.MyCases)
                   } else {
-                    const body = {
+                    const body: UpdateCaseApiProps['body'] = {
                       id: values.id!,
-                      case_number: values.caseNumber,
-                      title: values.title,
-                      description: values.description,
+                      caseCaseNumber: values.caseNumber,
+                      caseCourt: values.court,
+                      caseTitle: values.title,
+                      caseDescription: values.description,
                     }
 
                     await dispatch(updateCaseApi({ setIsLoading, body })).unwrap()
@@ -122,8 +127,23 @@ export default function CreateEditCase() {
                 }
               }}
             >
-              {({ values, touched, errors, handleChange, handleSubmit }) => (
+              {({ values, touched, errors, setFieldTouched, handleChange, handleSubmit }) => (
                 <Form className="flex flex-col gap-8" onSubmit={handleSubmit} autoComplete="off">
+                  <FormElems.Field className="flex-1">
+                    <FormElems.Label htmlFor="caseNumber">Court</FormElems.Label>
+                    <FormElems.Input
+                      id="court"
+                      name="court"
+                      placeholder="Enter the court name"
+                      value={values.court}
+                      onChange={handleChange}
+                      hasError={touched.court && !!errors.court}
+                      disabled={!!isFormLoading}
+                      autoFocus
+                    />
+                    <FormElems.ErrMsg name="court" />
+                  </FormElems.Field>
+
                   <div className="flex gap-8">
                     <FormElems.Field className="flex-1">
                       <FormElems.Label htmlFor="caseNumber">Case Number</FormElems.Label>
@@ -135,7 +155,6 @@ export default function CreateEditCase() {
                         onChange={handleChange}
                         hasError={touched.caseNumber && !!errors.caseNumber}
                         disabled={!!isFormLoading}
-                        autoFocus
                       />
                       <FormElems.ErrMsg name="caseNumber" />
                     </FormElems.Field>
@@ -157,13 +176,11 @@ export default function CreateEditCase() {
 
                   <FormElems.Field>
                     <FormElems.Label htmlFor="description">Description</FormElems.Label>
-                    <FormElems.Textarea
-                      id="description"
-                      name="description"
+                    <FormElems.Editor
                       placeholder="Enter the description"
-                      value={values.description}
-                      onChange={handleChange}
-                      hasError={touched.description && !!errors.description}
+                      initialData={values.description}
+                      setData={data => handleChange({ target: { name: 'description', value: data } })}
+                      setTouched={touched => setFieldTouched('description', touched)}
                       disabled={!!isFormLoading}
                     />
                     <FormElems.ErrMsg name="description" />

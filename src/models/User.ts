@@ -3,16 +3,17 @@ import { UserRole } from '@/utils/enums'
 import { DateTimeFormat } from '@/utils/consts'
 
 export interface RespUser {
-  id: number
-  role: UserRole
-  username: string
-  email?: string | null
-  email_verified_at?: string | null
-  name?: string | null
-  avatar?: string | null
-  bio?: string | null
-  created_at: string
-  updated_at: string
+  userId: number | string
+  userRole: UserRole | string
+  userUsername: string
+  userEmail?: string | null
+  userEmailVerifiedAt?: string | null
+  userName?: string | null
+  userAvatar?: string | null
+  userBio?: string | null
+  userCreatedAt: string
+  userUpdatedAt: string
+  userDeletedAt?: string | null
 }
 
 export default class User {
@@ -26,6 +27,7 @@ export default class User {
   bio?: string | null
   createdAt: string
   updatedAt: string
+  deletedAt?: string | null
 
   constructor(userRef: User) {
     this.id = userRef.id
@@ -38,20 +40,23 @@ export default class User {
     this.bio = userRef.bio
     this.createdAt = userRef.createdAt
     this.updatedAt = userRef.updatedAt
+    this.deletedAt = userRef.deletedAt
   }
 
   static fromResp(respUser: RespUser) {
     return new User({
-      id: respUser.id,
-      role: respUser.role,
-      username: respUser.username,
-      email: respUser.email,
-      emailVerifiedAt: respUser.email_verified_at && moment(respUser.email_verified_at, DateTimeFormat).toISOString(),
-      name: respUser.name,
-      avatar: respUser.avatar,
-      bio: respUser.bio,
-      createdAt: moment.utc(respUser.created_at, DateTimeFormat).toISOString(),
-      updatedAt: moment.utc(respUser.updated_at, DateTimeFormat).toISOString(),
+      id: +respUser.userId,
+      role: +respUser.userRole,
+      username: respUser.userUsername,
+      email: respUser.userEmail,
+      emailVerifiedAt:
+        respUser.userEmailVerifiedAt && moment(respUser.userEmailVerifiedAt, DateTimeFormat).toISOString(),
+      name: respUser.userName,
+      avatar: respUser.userAvatar,
+      bio: respUser.userBio,
+      createdAt: moment.utc(respUser.userCreatedAt, DateTimeFormat).toISOString(),
+      updatedAt: moment.utc(respUser.userUpdatedAt, DateTimeFormat).toISOString(),
+      deletedAt: respUser.userDeletedAt && moment.utc(respUser.userDeletedAt, DateTimeFormat).toISOString(),
     })
   }
 }

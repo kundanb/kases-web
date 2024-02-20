@@ -1,6 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import cn from 'classnames'
 import { ErrorMessage, type FormikContextType } from 'formik'
+import ReactSelect, { SingleValue as ReactSelectSingleValue } from 'react-select'
+import AsyncReactSelect from 'react-select/async'
+import Quill from 'quill'
 import FormikErrorFocus from 'formik-error-focus'
 
 export interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -92,6 +95,7 @@ export const Radio = ({ label, inputSize, className, ...props }: RadioProps) => 
             'bg-light-acc ring': isFocused,
             'bg-light-acc border-prim': props.checked,
           },
+          className,
         )}
       >
         <span
@@ -119,7 +123,7 @@ export interface RadioGroupProps {
 
 export const RadioGroup = ({ className, options, name, value, onChange, disabled, hasError }: RadioGroupProps) => {
   return (
-    <div className={cn('flex gap-3 rounded ring-offset-4 ring-danger', { ring: hasError }, className)}>
+    <div className={cn('flex gap-3 rounded ring-offset-[6px] ring-danger', { ring: hasError }, className)}>
       {options.map((opt, idx) => (
         <Radio
           key={idx}
@@ -135,12 +139,134 @@ export const RadioGroup = ({ className, options, name, value, onChange, disabled
   )
 }
 
+export type SelectOption<V = string> = { label: string; value: V }
+export type SelectValue<V = string> = ReactSelectSingleValue<SelectOption<V>> | null
+
+export interface SelectProps<V = string> {
+  options: SelectOption<V>[]
+  value: SelectValue<V>
+  onChange: (value: SelectValue<V>) => void
+}
+
+export function Select<V = string>({ options, value, onChange }: SelectProps<V>) {
+  return <ReactSelect options={options} value={value} onChange={onChange} />
+}
+
+export interface AsyncSelectProps<V = string> {
+  id?: string
+  name?: string
+  placeholder?: string
+  loadOptions: (input: string) => Promise<SelectOption<V>[]>
+  value: SelectValue<V>
+  onChange: (value: SelectValue<V>) => void
+  autoFocus?: boolean
+  hasError?: boolean
+  disabled?: boolean
+}
+
+export function AsyncSelect<V = string>({
+  id,
+  name,
+  placeholder,
+  loadOptions,
+  value,
+  onChange,
+  hasError,
+  disabled,
+  autoFocus,
+}: AsyncSelectProps<V>) {
+  return (
+    <AsyncReactSelect
+      id={id}
+      name={name}
+      placeholder={placeholder}
+      cacheOptions
+      loadOptions={loadOptions}
+      value={value}
+      onChange={onChange}
+      isDisabled={disabled}
+      autoFocus={autoFocus}
+      classNames={{
+        control: state =>
+          cn(
+            'h-12 !rounded',
+            state.isFocused ? '!border-dark/50 !ring' : '!border-borderColor',
+            hasError && '!border-danger !ring-danger',
+          ),
+        dropdownIndicator: () => '!h-[2.5em] flex items-center',
+      }}
+    />
+  )
+}
+
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   hasError?: boolean
 }
 
 export const Textarea = ({ hasError, className, ...props }: TextareaProps) => {
-  return <textarea {...props} className={cn('form-ctrl', hasError && '', className)} />
+  return <textarea {...props} className={cn('form-ctrl', hasError && 'form-ctrl-error', className)} />
+}
+
+export interface EditorProps {
+  className?: string
+  placeholder?: string
+  initialData?: string
+  setData: (data: string) => void
+  setTouched?: (touched: boolean) => void
+  disabled?: boolean
+  hasError?: boolean
+}
+
+export function Editor({ className, placeholder, initialData, setData, setTouched, disabled, hasError }: EditorProps) {
+  const editorRef = useRef<HTMLDivElement>(null)
+  const quillRef = useRef<Quill>()
+
+  const placeholderRef = useRef<string>(placeholder || '')
+  const initialDataRef = useRef<string>(initialData || '')
+
+  const [editorData, setEditorData] = useState(initialDataRef.current)
+
+  const [isFocused, setIsFocused] = useState(false)
+
+  useEffect(() => {
+    if (editorRef.current) {
+      quillRef.current = new Quill(editorRef.current, {
+        theme: 'snow',
+        placeholder: placeholderRef.current,
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'link'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+          ],
+        },
+      })
+
+      quillRef.current.root.innerHTML = initialDataRef.current
+      quillRef.current.root.addEventListener('focus', () => setIsFocused(true))
+      quillRef.current.root.addEventListener('blur', () => setIsFocused(false))
+
+      quillRef.current.on('text-change', () => {
+        setEditorData(quillRef.current!.root.innerHTML)
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    setData(editorData)
+    setTouched?.(true)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editorData])
+
+  useEffect(() => {
+    quillRef.current?.enable(!disabled)
+  }, [disabled])
+
+  return (
+    <div className={cn('rounded', isFocused && 'ring', hasError && 'ring-danger', className)}>
+      <div ref={editorRef} />
+    </div>
+  )
 }
 
 export interface ErrMsgProps extends React.ComponentProps<typeof ErrorMessage> {}

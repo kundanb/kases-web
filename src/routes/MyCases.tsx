@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
-import moment from 'moment'
 import type { ApiErrResp } from '@/utils/types'
 import { CaseStatus } from '@/utils/enums'
 import { Routes } from '@/utils/consts'
@@ -58,11 +57,6 @@ export default function MyCases() {
       title: 'Status',
       key: 'status',
       render: status => <span className="tag tag-xs tag-info">{CaseStatus[status as CaseStatus]}</span>,
-    },
-    {
-      title: 'Last Updated',
-      key: 'updatedAt',
-      render: date => <span className="text-nowrap">{moment(date as string).format('ll')}</span>,
     },
     {
       title: 'Actions',

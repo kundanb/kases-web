@@ -16,6 +16,8 @@ import MyCases from './routes/MyCases'
 import CreateEditCase from './routes/CreateEditCase'
 import MyCase from './routes/MyCase'
 import MyHearings from './routes/MyHearings'
+import CreateEditHearing from './routes/CreateEditHearing'
+import MyHearing from './routes/MyHearing'
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -52,6 +54,9 @@ export default function App() {
                 <Route path={Routes.EditCase()} exact component={CreateEditCase} />
                 <Route path={Routes.MyCase()} exact component={MyCase} />
                 <Route path={Routes.MyHearings} exact component={MyHearings} />
+                <Route path={Routes.CreateHearing} exact component={CreateEditHearing} />
+                <Route path={Routes.EditHearing()} exact component={CreateEditHearing} />
+                <Route path={Routes.MyHearing()} exact component={MyHearing} />
 
                 <Route path="*">
                   <Redirect to={Routes.MyDashboard} />

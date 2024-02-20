@@ -1,15 +1,18 @@
 import moment from 'moment'
 import { DateTimeFormat } from '@/utils/consts'
-import Case from './Case'
+import Case, { RespCase } from './Case'
 
 export interface RespHearing {
-  id: number
-  case_id: number
-  date: string
-  description?: string | null
-  previous_id?: number | null
-  created_at: string
-  updated_at: string
+  hearingId: number | string
+  hearingCaseId: number | string
+  hearingDate: string
+  hearingDescription?: string | null
+  hearingPreviousId?: number | null
+  hearingCreatedAt: string
+  hearingUpdatedAt: string
+  hearingDeletedAt?: string | null
+  hearingCase$?: RespCase | null
+  hearingPrevious$?: RespHearing | null
 }
 
 export default class Hearing {
@@ -20,6 +23,7 @@ export default class Hearing {
   previousId?: number | null
   createdAt: string
   updatedAt: string
+  deletedAt?: string | null
 
   case$?: Case | null
   previous$?: Hearing | null
@@ -32,17 +36,22 @@ export default class Hearing {
     this.previousId = hearingRef.previousId
     this.createdAt = hearingRef.createdAt
     this.updatedAt = hearingRef.updatedAt
+    this.deletedAt = hearingRef.deletedAt
+    this.case$ = hearingRef.case$
+    this.previous$ = hearingRef.previous$
   }
 
   static fromResp(respHearing: RespHearing) {
     return new Hearing({
-      id: respHearing.id,
-      caseId: respHearing.case_id,
-      date: moment.utc(respHearing.date, DateTimeFormat).toISOString(),
-      description: respHearing.description,
-      previousId: respHearing.previous_id,
-      createdAt: moment.utc(respHearing.created_at, DateTimeFormat).toISOString(),
-      updatedAt: moment.utc(respHearing.updated_at, DateTimeFormat).toISOString(),
+      id: +respHearing.hearingId,
+      caseId: +respHearing.hearingCaseId,
+      date: moment.utc(respHearing.hearingDate, DateTimeFormat).toISOString(),
+      description: respHearing.hearingDescription,
+      previousId: respHearing.hearingPreviousId,
+      createdAt: moment.utc(respHearing.hearingCreatedAt, DateTimeFormat).toISOString(),
+      updatedAt: moment.utc(respHearing.hearingUpdatedAt, DateTimeFormat).toISOString(),
+      deletedAt: respHearing.hearingDeletedAt && moment.utc(respHearing.hearingDeletedAt, DateTimeFormat).toISOString(),
+      case$: respHearing.hearingCase$ ? Case.fromResp(respHearing.hearingCase$) : null,
     })
   }
 }

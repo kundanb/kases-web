@@ -57,6 +57,9 @@ export default {
         'danger-acc': {
           DEFAULT: colors.red[600],
         },
+        borderColor: {
+          DEFAULT: '#e5e7eb',
+        },
       },
 
       fontFamily: {

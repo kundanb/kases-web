@@ -5,10 +5,10 @@ import axios from '@/utils/axios'
 import Hearing, { RespHearing } from '@/models/Hearing'
 
 export type CreateHearingApiProps = ApiBasePropsWithBody<{
-  case_id: number
-  date: string
-  description?: string | null
-  previous_id?: number | null
+  hearingCaseId: number
+  hearingDate: string
+  hearingDescription?: string | null
+  hearingPreviousId?: number | null
 }>
 
 export type CreateHearingApiOkResp = ApiOkResp
@@ -32,6 +32,7 @@ export const createHearingApi = createAsyncThunk<undefined, CreateHearingApiProp
 )
 
 export type MyHearingsApiProps = ApiBasePropsWithBody<{
+  search?: string
   page?: number
   perPage?: number
 }>
@@ -81,11 +82,10 @@ export const myHearingApi = createAsyncThunk<Hearing, MyHearingApiProps>(
 )
 
 export type UpdateHearingApiProps = ApiBasePropsWithBody<{
-  id: number
-  case_id: number
-  date: string
-  description?: string | null
-  previous_id?: number | null
+  hearingId: number
+  hearingDate: string
+  hearingDescription?: string | null
+  hearingPreviousId?: number | null
 }>
 
 export type UpdateHearingApiOkResp = ApiOkResp
@@ -94,7 +94,7 @@ export type UpdateHearingApiErrResp = ApiErrResp<Omit<UpdateHearingApiProps['bod
 export const updateHearingApi = createAsyncThunk<undefined, UpdateHearingApiProps>(
   'hearings/update',
 
-  async ({ setIsLoading, body: { id, ...body } }, { rejectWithValue }) => {
+  async ({ setIsLoading, body: { hearingId: id, ...body } }, { rejectWithValue }) => {
     setIsLoading?.(prev => prev + 1)
 
     try {

@@ -89,7 +89,7 @@ export default function Header() {
 
               <div className="header-user-menu relative flex">
                 <button
-                  className={cn('p-1 rounded-full bg-prim hover:bg-prim-acc focus:bg-prim-acc', {
+                  className={cn('p-1 rounded-full bg-prim hover:bg-prim-acc focus:bg-prim-acc focus:ring', {
                     'bg-gradient-to-br from-prim to-prim-acc': isUserMenuOpen,
                   })}
                   onClick={() => setIsUserMenuOpen(prev => !prev)}

@@ -1,5 +1,6 @@
 @import '@flaticon/flaticon-uicons/css/all/all.css';
 @import 'react-toastify/dist/ReactToastify.css';
+@import 'quill/dist/quill.snow.css';
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Raleway:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
 
@@ -9,7 +10,7 @@
 
 @layer base {
   * {
-    @apply scroll-smooth outline-none transition-all;
+    @apply scroll-smooth outline-none;
     @apply disabled:opacity-50 disabled:pointer-events-none;
   }
 
@@ -279,7 +280,7 @@
   }
 
   .form-ctrl {
-    @apply w-full px-[1em] py-[0.5em] rounded border bg-light;
+    @apply w-full px-[1em] h-12 rounded border bg-light;
     @apply focus:ring focus:border-dark/50 read-only:bg-light-acc read-only:text-dark/70;
   }
 
@@ -398,6 +399,20 @@
   .animate-fade-in {
     animation: animate-fade-in 0.3s ease-in-out;
   }
+}
+
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow {
+  @apply border-borderColor;
+}
+.ql-toolbar.ql-snow {
+  @apply bg-light-acc rounded-tl rounded-tr border-b-0;
+}
+.ql-container.ql-snow {
+  @apply rounded-bl rounded-br;
+}
+.ql-editor {
+  @apply min-h-48 text-base font-sans;
 }
 
 @keyframes animate-fade-in {

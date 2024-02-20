@@ -14,6 +14,11 @@ export interface PopupProps {
 
   okContent?: React.ReactNode
   onOk?: () => void
+
+  closeOnOk?: boolean
+
+  isLoading?: boolean
+  disabled?: boolean
 }
 
 export default function Popup({
@@ -25,6 +30,9 @@ export default function Popup({
   children,
   okContent,
   onOk,
+  closeOnOk = true,
+  isLoading,
+  disabled,
 }: PopupProps) {
   const dispatch = useAppDispatch()
 
@@ -46,7 +54,7 @@ export default function Popup({
 
   return (
     <div className="fixed top-0 left-0 z-popup w-screen h-screen bg-light/50 backdrop-blur-sm animate-fade-in">
-      <div className="w-full h-full" onClick={() => close()}></div>
+      <div className="w-full h-full" onClick={() => !disabled && close()}></div>
 
       <div
         className={cn(
@@ -83,7 +91,7 @@ export default function Popup({
             {title}
           </h2>
 
-          <button className="btn btn-sm btn-light" onClick={() => close()}>
+          <button className="btn btn-sm btn-light" onClick={() => close()} disabled={disabled}>
             <i className="fi fi-rr-cross"></i>
           </button>
         </div>
@@ -102,10 +110,12 @@ export default function Popup({
               'btn-danger': variant === 'danger',
             })}
             onClick={() => {
-              onOk && onOk()
-              close()
+              onOk?.()
+              closeOnOk && close()
             }}
+            disabled={disabled}
           >
+            {isLoading && <span className="spinner spinner-light" />}
             {okContent || 'Okay'}
           </button>
         </div>

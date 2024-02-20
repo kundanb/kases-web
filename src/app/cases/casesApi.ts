@@ -5,9 +5,10 @@ import axios from '@/utils/axios'
 import Case, { RespCase } from '@/models/Case'
 
 export type CreateCaseApiProps = ApiBasePropsWithBody<{
-  case_number: string
-  title: string
-  description?: string | null
+  caseCaseNumber: string
+  caseCourt: string
+  caseTitle: string
+  caseDescription?: string | null
 }>
 
 export type CreateCaseApiOkResp = ApiOkResp
@@ -30,7 +31,11 @@ export const createCaseApi = createAsyncThunk<undefined, CreateCaseApiProps>(
   },
 )
 
-export type MyCasesApiProps = ApiBasePropsWithBody<undefined | { page?: number; perPage?: number }>
+export type MyCasesApiProps = ApiBasePropsWithBody<{
+  search?: string
+  page?: number
+  perPage?: number
+}>
 
 export type MyCasesApiOkResp = ApiOkResp<RespCase[]>
 export type MyCasesApiErrResp = ApiErrResp
@@ -78,9 +83,10 @@ export const myCaseApi = createAsyncThunk<Case, MyCaseApiProps>(
 
 export type UpdateCaseApiProps = ApiBasePropsWithBody<{
   id: number
-  case_number: string
-  title: string
-  description?: string | null
+  caseCaseNumber: string
+  caseCourt: string
+  caseTitle: string
+  caseDescription?: string | null
 }>
 
 export type UpdateCaseApiOkResp = ApiOkResp

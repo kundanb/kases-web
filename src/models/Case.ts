@@ -4,25 +4,30 @@ import { DateTimeFormat } from '@/utils/consts'
 import User from './User'
 
 export interface RespCase {
-  id: number
-  added_by_id: number
-  case_number: string
-  title: string
-  description?: string | null
-  status: CaseStatus
-  created_at: string
-  updated_at: string
+  caseId: number | string
+  caseAddedById: number | string
+  caseCaseNumber: string
+  caseCourt: string
+  caseTitle: string
+  caseDescription?: string | null
+  caseStatus: CaseStatus | string
+  caseCreatedAt: string
+  caseUpdatedAt: string
+  caseDeletedAt?: string | null
+  caseAddedBy$?: User | null
 }
 
 export default class Case {
   id: number
   addedById: number
   caseNumber: string
+  court: string
   title: string
   description?: string | null
   status: CaseStatus
   createdAt: string
   updatedAt: string
+  deletedAt?: string | null
 
   addedBy$?: User | null
 
@@ -30,23 +35,27 @@ export default class Case {
     this.id = caseRef.id
     this.addedById = caseRef.addedById
     this.caseNumber = caseRef.caseNumber
+    this.court = caseRef.court
     this.title = caseRef.title
     this.description = caseRef.description
     this.status = caseRef.status
     this.createdAt = caseRef.createdAt
     this.updatedAt = caseRef.updatedAt
+    this.deletedAt = caseRef.deletedAt
   }
 
   static fromResp(respCase: RespCase) {
     return new Case({
-      id: respCase.id,
-      addedById: respCase.added_by_id,
-      caseNumber: respCase.case_number,
-      title: respCase.title,
-      description: respCase.description,
-      status: respCase.status,
-      createdAt: moment.utc(respCase.created_at, DateTimeFormat).toISOString(),
-      updatedAt: moment.utc(respCase.updated_at, DateTimeFormat).toISOString(),
+      id: +respCase.caseId,
+      addedById: +respCase.caseAddedById,
+      caseNumber: respCase.caseCaseNumber,
+      court: respCase.caseCourt,
+      title: respCase.caseTitle,
+      description: respCase.caseDescription,
+      status: +respCase.caseStatus,
+      createdAt: moment.utc(respCase.caseCreatedAt, DateTimeFormat).toISOString(),
+      updatedAt: moment.utc(respCase.caseUpdatedAt, DateTimeFormat).toISOString(),
+      deletedAt: respCase.caseDeletedAt && moment.utc(respCase.caseDeletedAt, DateTimeFormat).toISOString(),
     })
   }
 }
